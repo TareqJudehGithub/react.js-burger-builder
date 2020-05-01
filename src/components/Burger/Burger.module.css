@@ -1,0 +1,32 @@
+/* mobile layout */
+.Burger {
+     width: 300px;
+     margin: auto;
+     height: 550px;
+     overflow: hidden;
+     text-align: center;
+     font-weight: bold;
+     font-size: 1.2rem;
+}
+
+/* view ports */
+@media (min-width: 500px) and (min-height: 400px) {
+     .Burger {
+          width: 300px;
+          height: 300px;
+     }
+}
+
+@media (min-width: 700px) and (min-height: 401px) {
+     .Burger {
+          width: 500px;
+          height: 450px;
+     }
+}
+
+@media (min-width: 1000px) and (min-height: 700px) {
+     .Burger {
+          width: 700px;
+          height: 650px;
+     }
+}
