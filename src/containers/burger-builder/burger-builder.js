@@ -23,38 +23,35 @@ class BurgerBuilder extends React.Component {
           }
      }
      //methods:
-     addIngredientHandler = (type) => {
-          const oldCount = this.state.ingredients[type];
-          const updatedCount = oldCount +1;
-          const updatedIngredients = {...this.state.ingredients};
-          updatedIngredients[type] = updatedCount;
-          const priceAddition = INGREDIENT_PRICES[type]
+     addIngredientHandler = (itemToAdd) => {
+          
+         const ingredients = this.state.ingredients[itemToAdd];
+         const qty = ingredients + 1;
+         const updatedState = {...this.state.ingredients}
+         updatedState[itemToAdd] = qty;
+       
+          const priceAddition = INGREDIENT_PRICES[itemToAdd]
           const oldPrice = this.state.totalPrice;
           const newPrice = oldPrice + priceAddition;
 
           this.setState({
                totalPrice: newPrice,
-               ingredients: updatedIngredients
+               ingredients:updatedState
           });
      };
-     removeIngredientHandler = (type) => {
-          const oldCount = this.state.ingredients[type];
-          if(oldCount  <= 0) {
-               return;
+     removeIngredientHandler = (itemToRemove) => {
+          const ingredients = this.state.ingredients[itemToRemove];
+          const qty = ingredients - 1;
+          const updatedState = {...this.state.ingredients}
+          updatedState[itemToRemove] = qty;
 
-          }
-          const updatedCount = oldCount - 1;
-          const updatedIngredients = {...this.state.ingredients}
-          updatedIngredients[type] = updatedCount;
-          const priceDeduction = INGREDIENT_PRICES[type];
+          const priceDeduction = INGREDIENT_PRICES[itemToRemove];
           const oldPrice = this.state.totalPrice;
           const newPrice = oldPrice - priceDeduction;
           this.setState({
                totalPrice: newPrice,
-               ingredients: updatedIngredients
+               ingredients: updatedState
           })
-
-
      };
      render() {
           return (
