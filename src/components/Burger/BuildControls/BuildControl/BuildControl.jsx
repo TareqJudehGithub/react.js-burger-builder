@@ -5,10 +5,11 @@ const BuildControl = (props) => {
      return (
           <div className={classes.BuildControl}>
                <div className={classes.Label}>{props.label}</div>
+
                <button 
                className={classes.Less}
                onClick={props.remove}
-               disabled={props.disabled} //disabled is a default html
+               disabled={props.disableOrderBtn} //disabled is a default html
                >
                     &#8826;
                </button>

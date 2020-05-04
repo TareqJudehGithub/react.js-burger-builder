@@ -1,17 +1,11 @@
 .BuildControl {
-     /* display: flex;
-     justify-content: space-between;
-     align-items: center;
-     margin: 5px 0; */
-    
     display: flex; 
     text-align: center;
     margin: 10px 10px;
     flex-direction: row;
     justify-items: center;
     justify-content: center;
-    
-
+   
  }
  
  .BuildControl button {
@@ -43,16 +37,19 @@
      padding: 10px;
      font-weight: bold;
      width: 80px;
+    margin: 0 15px;
  }
  
  .BuildControl .Less {  
      background-color: #D39952;
      color: white;
+     margin: 0 15px;
  }
  
  .BuildControl .More {
      background-color: #8F5E1E;
      color: white;
+     margin: 0 15px;
  }
  
  .BuildControl .Less:hover, .BuildControl .Less:active {  

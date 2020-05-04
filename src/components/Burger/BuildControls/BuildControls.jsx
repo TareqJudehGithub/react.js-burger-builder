@@ -13,6 +13,7 @@ const BuildControls = (props) => {
      
      return (
           <div className={classes.BuildControls}>
+              
                {
                controls.map(control => {
                     return <BuildControl 
@@ -20,12 +21,26 @@ const BuildControls = (props) => {
                               label={control.label}
                               add={() => props.addIngredient(control.type)}
                               remove={() => props.removeIngredient(control.type)}
-                              disabled={props.ingredients[control.type] <= 0 }
+                              disableOrderBtn={props.ingredients[control.type] === 0 }            
                          />
                })
                }
-          </div>
-          
+                <p>
+                    {
+                         props.price > 0
+                         ?
+                    `Price:  ${props.price.toFixed(2).toString()}` 
+                         :
+                         null
+                    }
+               </p>    
+               <button 
+               className={classes.OrderButton}
+               hidden={props.EnableOrderButton}
+               onClick={props.ShowOrderMenu}> 
+               Order
+               </button>
+          </div>    
      )   
 }
 export default BuildControls;

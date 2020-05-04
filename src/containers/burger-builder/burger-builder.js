@@ -1,6 +1,8 @@
 import React from "react";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
+import Modal from "../../components/UI/Modal/modal";
+import OrderSummary from "../../components/Burger/OrderSummary/orderSummary";
 
 const INGREDIENT_PRICES = {
      salad: 0.5,
@@ -19,10 +21,29 @@ class BurgerBuilder extends React.Component {
                     cheese: 0,
                     meat: 0
                },
-               totalPrice: 1
+               totalPrice: 0, 
+               orderButton: true,
+               orderMenu: false
           }
      }
      //methods:
+     orderMenuHandler = () => {
+          this.setState({
+               orderMenu: true
+          });
+     };
+    
+     updateOrderBtnState (ingredients) {
+          const values = Object.keys(this.state.ingredients)
+                         .map(key => {
+                              return ingredients[key];
+                         })
+                         .reduce((type, value) => {
+                              return type + value;  
+                         }, 0);
+                         this.setState({ orderButton: values === 0})
+                              
+     }
      addIngredientHandler = (itemToAdd) => {
           
          const ingredients = this.state.ingredients[itemToAdd];
@@ -38,6 +59,7 @@ class BurgerBuilder extends React.Component {
                totalPrice: newPrice,
                ingredients:updatedState
           });
+           this.updateOrderBtnState(updatedState);
      };
      removeIngredientHandler = (itemToRemove) => {
           const ingredients = this.state.ingredients[itemToRemove];
@@ -47,11 +69,12 @@ class BurgerBuilder extends React.Component {
 
           const priceDeduction = INGREDIENT_PRICES[itemToRemove];
           const oldPrice = this.state.totalPrice;
-          const newPrice = oldPrice - priceDeduction;
+          const newPrice = oldPrice - priceDeduction ;
           this.setState({
                totalPrice: newPrice,
                ingredients: updatedState
           })
+          this.updateOrderBtnState(updatedState);
      };
      render() {
           return (
@@ -61,7 +84,16 @@ class BurgerBuilder extends React.Component {
                     addIngredient={this.addIngredientHandler}
                     removeIngredient={this.removeIngredientHandler}
                     ingredients={this.state.ingredients}
+                    price={this.state.totalPrice}
+                    EnableOrderButton={this.state.orderButton}
+                    ShowOrderMenu={this.orderMenuHandler}
                     />
+
+                    <Modal show={this.state.orderMenu}>
+                         <OrderSummary 
+                         ingredients={this.state.ingredients}
+                         />
+                    </Modal>
                </React.Fragment>
           )
      }
