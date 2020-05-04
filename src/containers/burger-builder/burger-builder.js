@@ -25,7 +25,7 @@ class BurgerBuilder extends React.Component {
                orderButton: true,
                orderMenu: false
           }
-     }
+     };
      //methods:
      orderMenuHandler = () => {
           this.setState({
@@ -43,6 +43,15 @@ class BurgerBuilder extends React.Component {
                          }, 0);
                          this.setState({ orderButton: values === 0})
                               
+     };
+     //Canceling order menu, going back to main menu:
+     orderCancelHandler = () => {
+          this.setState({orderMenu: false})
+     };
+     orderConfirmHandler = () => {
+          alert(`   Thank you for your order! 
+          Your total is $${this.state.totalPrice}`);
+     
      }
      addIngredientHandler = (itemToAdd) => {
           
@@ -89,9 +98,13 @@ class BurgerBuilder extends React.Component {
                     ShowOrderMenu={this.orderMenuHandler}
                     />
 
-                    <Modal show={this.state.orderMenu}>
+                    <Modal show={this.state.orderMenu}
+                    modalClosed={this.orderCancelHandler}>
                          <OrderSummary 
                          ingredients={this.state.ingredients}
+                         orderCancel={this.orderCancelHandler}
+                         orderConfirm={this.orderConfirmHandler}
+                         price={this.state.totalPrice}
                          />
                     </Modal>
                </React.Fragment>

@@ -25,15 +25,14 @@ const BuildControls = (props) => {
                          />
                })
                }
-                <p>
-                    {
+                <p><strong> {
                          props.price > 0
                          ?
-                    `Price:  ${props.price.toFixed(2).toString()}` 
+                    `Price:  $${props.price.toFixed(2)}` 
                          :
                          null
-                    }
-               </p>    
+                    } </strong>
+               </p>
                <button 
                className={classes.OrderButton}
                hidden={props.EnableOrderButton}
