@@ -1,4 +1,4 @@
-import React from "react"
+import React from "react";
 import  Button from "../../UI/Button/button";
 import classes from "./orderSummary.module.css";
 const OrderSummary = (props) => {
@@ -7,7 +7,8 @@ const OrderSummary = (props) => {
      return <li
                key={ingKey}
                style={{textTransform: "capitalize"}}>
-               {ingKey} <span>
+               {ingKey} 
+               <span>
                     :{props.ingredients[ingKey]}
                </span>
           </li>

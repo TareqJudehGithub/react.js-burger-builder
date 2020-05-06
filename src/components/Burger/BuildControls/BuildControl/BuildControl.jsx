@@ -9,7 +9,7 @@ const BuildControl = (props) => {
                <button 
                className={classes.Less}
                onClick={props.remove}
-               disabled={props.disableOrderBtn} //disabled is a default html
+               disabled={props.disableRemove}
                >
                     &#8826;
                </button>

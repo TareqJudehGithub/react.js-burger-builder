@@ -21,7 +21,7 @@ const BuildControls = (props) => {
                               label={control.label}
                               add={() => props.addIngredient(control.type)}
                               remove={() => props.removeIngredient(control.type)}
-                              disableOrderBtn={props.ingredients[control.type] === 0 }            
+                              disableRemove={props.price <= 0}                              
                          />
                })
                }
