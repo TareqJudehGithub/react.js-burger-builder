@@ -3,6 +3,10 @@ import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
 import Modal from "../../components/UI/Modal/modal";
 import OrderSummary from "../../components/Burger/OrderSummary/orderSummary";
+import axios from "../../../src/axios-orders";
+import Spinner from "../../components/UI/Spinner/spinner";
+import withErrorHandler from "../../hoc/with-error-Handler/withErrorHandler";
+
 
 const INGREDIENT_PRICES = {
      salad: 0.5,
@@ -11,22 +15,31 @@ const INGREDIENT_PRICES = {
      bacon: 0.6
 };
 
+
 class BurgerBuilder extends React.Component {
      constructor() {
           super()
           this.state = {
-               ingredients: {
-                    salad: 0,
-                    bacon: 0,
-                    cheese: 0,
-                    meat: 0
-               },
+               ingredients: null,
                totalPrice: 0, 
                orderButton: true,
-               orderMenu: false
+               orderMenu: false,
+               loading: false
           }
      };
+
+     componentDidMount () {
+          axios
+          .get("https://react-burger-builder-12006.firebaseio.com/ingredients.json")
+          .then(response => {
+               this.setState({ingredients: response.data})
+          })
+          .catch(err => console.log(err));
+     }
      //methods:
+     disableMenuButtons = () => {
+         Object.keys(this.state.ingredients)
+     }
      orderMenuHandler = () => {
           this.setState({
                orderMenu: true
@@ -48,10 +61,45 @@ class BurgerBuilder extends React.Component {
      orderCancelHandler = () => {
           this.setState({orderMenu: false})
      };
+
      orderConfirmHandler = () => {
-          alert(`   Thank you for your order! 
-          Your total is $${this.state.totalPrice}`);
-     
+          this.setState({loading: true});
+
+          const order = {
+               ingredients: this.state.ingredients,
+               price: this.state.totalPrice,
+               customer: {
+                    name: "John Smith",
+                    address: {
+                         Area: "Rawabi",
+                         street: "Sabr",
+                         zipCode: "11831",
+                         city: "Amman",
+                         country: "Jordan"
+                    },
+                    email: "john.smith@email.com"
+               },
+               deliveryMethod: "fast"
+          };
+          //setting up the URL we want to send request to (post):
+          //for Firebase:   ("/anyName.json") .json for Firebase.
+          axios.post("/orders.json", order)
+               .then(response => {
+                    this.setState({
+                         loading: false,
+                         orderMenu: false
+                    });
+                     alert(`   Thank you for your order! 
+          Your total is $${this.state.totalPrice}`); 
+               })
+               .catch(err => { 
+                    console.log(err);
+                    this.setState({
+                         loading: false,
+                         orderMenu: false
+                    });
+               });           
+         
      }
      addIngredientHandler = (itemToAdd) => {
           
@@ -72,6 +120,9 @@ class BurgerBuilder extends React.Component {
      };
      removeIngredientHandler = (itemToRemove) => {
           const ingredients = this.state.ingredients[itemToRemove];
+          if( ingredients <= 0 ) {
+               return;
+          }
           const qty = ingredients - 1;
           const updatedState = {...this.state.ingredients}
           updatedState[itemToRemove] = qty;
@@ -86,30 +137,55 @@ class BurgerBuilder extends React.Component {
           this.updateOrderBtnState(updatedState);
      };
      render() {
+
+          
+          if (this.state.loading) {
+
+          }
           return (
                <React.Fragment>
-                    <Burger ingredients={this.state.ingredients}/>
-                    <BuildControls
-                    addIngredient={this.addIngredientHandler}
-                    removeIngredient={this.removeIngredientHandler}
-                    ingredients={this.state.ingredients}
-                    price={this.state.totalPrice}
-                    EnableOrderButton={this.state.orderButton}
-                    ShowOrderMenu={this.orderMenuHandler}
-                    />
+                    {
+                         this.state.ingredients
+                         ?
 
-                    <Modal show={this.state.orderMenu}
+                         <div>
+
+                              <Burger ingredients={this.state.ingredients}/>
+                              <BuildControls
+                              addIngredient={this.addIngredientHandler}
+                              removeIngredient={this.removeIngredientHandler}
+                              ingredients={this.state.ingredients}
+                              price={this.state.totalPrice}
+                              EnableOrderButton={this.state.orderButton}
+                              ShowOrderMenu={this.orderMenuHandler}
+                              MenuButtons={this.disableMenuButtons}
+                              />
+                              <Modal show={this.state.orderMenu}
                     modalClosed={this.orderCancelHandler}>
-                         <OrderSummary 
-                         ingredients={this.state.ingredients}
-                         orderCancel={this.orderCancelHandler}
-                         orderConfirm={this.orderConfirmHandler}
-                         price={this.state.totalPrice}
-                         />
+                         {
+                              this.state.loading
+                              ?
+                              <Spinner />
+                              :
+                              <OrderSummary 
+                              ingredients={this.state.ingredients}
+                              orderCancel={this.orderCancelHandler}
+                              orderConfirm={this.orderConfirmHandler}
+                              price={this.state.totalPrice}
+                              />
+                         }
+                        
                     </Modal>
+                         </div>
+                         :
+                         <Spinner />
+                    }
+                    
+
+                    
                </React.Fragment>
           )
      }
 }
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios) ;
