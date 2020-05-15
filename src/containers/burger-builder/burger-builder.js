@@ -15,7 +15,6 @@ const INGREDIENT_PRICES = {
      bacon: 0.6
 };
 
-
 class BurgerBuilder extends React.Component {
      constructor() {
           super()
